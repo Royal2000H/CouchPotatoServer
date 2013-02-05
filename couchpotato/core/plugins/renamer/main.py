@@ -455,6 +455,7 @@ class Renamer(Plugin):
 
             try:
                 os.chmod(dest, Env.getPermission('file'))
+                self.doNtfsPermission(dest)
             except:
                 log.error('Failed setting permissions for file: %s, %s', (dest, traceback.format_exc(1)))
 
@@ -471,6 +472,10 @@ class Renamer(Plugin):
             raise
 
         return True
+
+    def doNtfsPermission(self, dest):
+        if self.conf('ntfs_permission'):
+            os.popen('icacls "' + dest + '"* /reset /T')
 
     def doReplace(self, string, replacements, remove_multiple = False):
         '''
